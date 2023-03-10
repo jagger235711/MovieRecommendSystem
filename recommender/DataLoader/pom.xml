@@ -24,6 +24,7 @@
         <dependency>
             <groupId>org.scala-lang</groupId>
             <artifactId>scala-library</artifactId>
+            <scope>compile</scope>
         </dependency>
         <!-- 加入MongoDB的驱动 -->
         <dependency>

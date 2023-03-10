@@ -14,71 +14,75 @@ import org.elasticsearch.common.transport.InetSocketTransportAddress
 import org.elasticsearch.transport.client.PreBuiltTransportClient
 
 /**
-  * Copyright (c) 2018-2028 尚硅谷 All Rights Reserved 
-  *
-  * Project: MovieRecommendSystem
-  * Package: com.atguigu.recommender
-  * Version: 1.0
-  *
-  * Created by wushengran on 2019/4/1 15:51
-  */
+ * Copyright (c) 2018-2028 尚硅谷 All Rights Reserved
+ *
+ * Project: MovieRecommendSystem
+ * Package: com.atguigu.recommender
+ * Version: 1.0
+ *
+ * Created by wushengran on 2019/4/1 15:51
+ */
 
 /**
-  * Movie 数据集
-  *
-  * 260                                         电影ID，mid
-  * Star Wars: Episode IV - A New Hope (1977)   电影名称，name
-  * Princess Leia is captured and held hostage  详情描述，descri
-  * 121 minutes                                 时长，timelong
-  * September 21, 2004                          发行时间，issue
-  * 1977                                        拍摄时间，shoot
-  * English                                     语言，language
-  * Action|Adventure|Sci-Fi                     类型，genres
-  * Mark Hamill|Harrison Ford|Carrie Fisher     演员表，actors
-  * George Lucas                                导演，directors
-  *
-  */
+ * Movie 数据集
+ *
+ * 260                                         电影ID，mid
+ * Star Wars: Episode IV - A New Hope (1977)   电影名称，name
+ * Princess Leia is captured and held hostage  详情描述，descri
+ * 121 minutes                                 时长，timelong
+ * September 21, 2004                          发行时间，issue
+ * 1977                                        拍摄时间，shoot
+ * English                                     语言，language
+ * Action|Adventure|Sci-Fi                     类型，genres
+ * Mark Hamill|Harrison Ford|Carrie Fisher     演员表，actors
+ * George Lucas                                导演，directors
+ *
+ */
 case class Movie(mid: Int, name: String, descri: String, timelong: String, issue: String,
                  shoot: String, language: String, genres: String, actors: String, directors: String)
 
 /**
-  * Rating数据集
-  *
-  * 1,31,2.5,1260759144
-  */
+ * Rating数据集
+ *
+ * 1,31,2.5,1260759144
+ */
 case class Rating(uid: Int, mid: Int, score: Double, timestamp: Int )
 
 /**
-  * Tag数据集
-  *
-  * 15,1955,dentist,1193435061
-  */
+ * Tag数据集
+ *
+ * 15,1955,dentist,1193435061
+ */
 case class Tag(uid: Int, mid: Int, tag: String, timestamp: Int)
 
 // 把mongo和es的配置封装成样例类
 
 /**
-  *
-  * @param uri MongoDB连接
-  * @param db  MongoDB数据库
-  */
+ *
+ * @param uri MongoDB连接
+ * @param db  MongoDB数据库
+ */
 case class MongoConfig(uri:String, db:String)
 
 /**
-  *
-  * @param httpHosts       http主机列表，逗号分隔
-  * @param transportHosts  transport主机列表
-  * @param index            需要操作的索引
-  * @param clustername      集群名称，默认elasticsearch
-  */
+ *
+ * @param httpHosts       http主机列表，逗号分隔
+ * @param transportHosts  transport主机列表
+ * @param index            需要操作的索引
+ * @param clustername      集群名称，默认elasticsearch
+ */
 case class ESConfig(httpHosts:String, transportHosts:String, index:String, clustername:String)
 
 object DataLoader {
 
   // 定义常量
-  val MOVIE_DATA_PATH = "D:\\Projects\\BigData\\MovieRecommendSystem\\recommender\\DataLoader\\src\\main\\resources\\movies.csv"
-  val RATING_DATA_PATH = "D:\\Projects\\BigData\\MovieRecommendSystem\\recommender\\DataLoader\\src\\main\\resources\\ratings.csv"
-  val TAG_DATA_PATH = "D:\\Projects\\BigData\\MovieRecommendSystem\\recommender\\DataLoader\\src\\main\\resources\\tags.csv"
+  //  val MOVIE_DATA_PATH = "D:\\Projects\\BigData\\MovieRecommendSystem\\recommender\\DataLoader\\src\\main\\resources\\movies.csv"
+  //  val RATING_DATA_PATH = "D:\\Projects\\BigData\\MovieRecommendSystem\\recommender\\DataLoader\\src\\main\\resources\\ratings.csv"
+  //  val TAG_DATA_PATH = "D:\\Projects\\BigData\\MovieRecommendSystem\\recommender\\DataLoader\\src\\main\\resources\\tags.csv"
+  //  C:\Users\25258\IdeaProjects\MovieRecommendSystem\recommender\DataLoader\src\main\resources\movies.csv
+  val MOVIE_DATA_PATH = "C:\\Users\\25258\\IdeaProjects\\MovieRecommendSystem\\recommender\\DataLoader\\src\\main\\resources\\movies.csv"
+  val RATING_DATA_PATH = "C:\\Users\\25258\\IdeaProjects\\MovieRecommendSystem\\recommender\\DataLoader\\src\\main\\resources\\ratings.csv"
+  val TAG_DATA_PATH = "C:\\Users\\25258\\IdeaProjects\\MovieRecommendSystem\\recommender\\DataLoader\\src\\main\\resources\\tags.csv"
 
   val MONGODB_MOVIE_COLLECTION = "Movie"
   val MONGODB_RATING_COLLECTION = "Rating"
@@ -86,15 +90,14 @@ object DataLoader {
   val ES_MOVIE_INDEX = "Movie"
 
   def main(args: Array[String]): Unit = {
-
     val config = Map(
       "spark.cores" -> "local[*]",
-      "mongo.uri" -> "mongodb://localhost:27017/recommender",
+      "mongo.uri" -> "mongodb://192.168.197.132:27017/recommender",
       "mongo.db" -> "recommender",
-      "es.httpHosts" -> "localhost:9200",
-      "es.transportHosts" -> "localhost:9300",
+      "es.httpHosts" -> "192.168.197.132:9200",
+      "es.transportHosts" -> "192.168.197.132:9300",
       "es.index" -> "recommender",
-      "es.cluster.name" -> "elasticsearch"
+      "es.cluster.name" -> "es-cluster"
     )
 
     // 创建一个sparkConf
@@ -138,10 +141,10 @@ object DataLoader {
     import org.apache.spark.sql.functions._
 
     /**
-      * mid, tags
-      *
-      * tags: tag1|tag2|tag3...
-      */
+     * mid, tags
+     *
+     * tags: tag1|tag2|tag3...
+     */
     val newTag = tagDF.groupBy($"mid")
       .agg( concat_ws( "|", collect_set($"tag") ).as("tags") )
       .select("mid", "tags")
@@ -215,8 +218,8 @@ object DataLoader {
 
     // 先清理遗留的数据
     if( esClient.admin().indices().exists( new IndicesExistsRequest(eSConfig.index) )
-        .actionGet()
-        .isExists
+      .actionGet()
+      .isExists
     ){
       esClient.admin().indices().delete( new DeleteIndexRequest(eSConfig.index) )
     }
