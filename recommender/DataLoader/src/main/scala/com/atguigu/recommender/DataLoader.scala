@@ -92,10 +92,10 @@ object DataLoader {
   def main(args: Array[String]): Unit = {
     val config = Map(
       "spark.cores" -> "local[*]",
-      "mongo.uri" -> "mongodb://192.168.197.132:27017/recommender",
+      "mongo.uri" -> "mongodb://192.168.197.129:27017/recommender",
       "mongo.db" -> "recommender",
-      "es.httpHosts" -> "192.168.197.132:9200",
-      "es.transportHosts" -> "192.168.197.132:9300",
+      "es.httpHosts" -> "192.168.197.129:9200",
+      "es.transportHosts" -> "192.168.197.129:9300",
       "es.index" -> "recommender",
       "es.cluster.name" -> "es-cluster"
     )

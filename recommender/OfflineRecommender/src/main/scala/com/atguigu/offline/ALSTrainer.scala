@@ -21,7 +21,7 @@ object ALSTrainer {
   def main(args: Array[String]): Unit = {
     val config = Map(
       "spark.cores" -> "local[*]",
-      "mongo.uri" -> "mongodb://localhost:27017/recommender",
+      "mongo.uri" -> "mongodb://192.168.197.129:27017/recommender",
       "mongo.db" -> "recommender"
     )
 
@@ -65,7 +65,8 @@ object ALSTrainer {
         ( rank, lambda, rmse )
       }
     // 控制台打印输出最优参数
-    println(result.minBy(_._3))
+//    println(result.minBy(_._3))
+    println(result.mkString("Array(", " | ", ")"))
   }
 
   def getRMSE(model: MatrixFactorizationModel, data: RDD[Rating]): Double = {
