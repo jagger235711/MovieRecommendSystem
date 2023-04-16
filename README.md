@@ -6,3 +6,21 @@
 视频地址https://www.bilibili.com/video/BV1R4411N78S/
 
 配置环境问题有需要可以联系我
+
+## 项目环境配置
+
+OS：CentOS 7（项目代码在宿主机上，其余环境都在虚拟机上跑的）
+
+JDK 1.8.0
+Tomcat 5.5
+Mongodb 3.4
+Elasticsearch 5.6
+Redis 2.9
+Kafka 3.4
+Spark 2.1
+
+
+## 项目配置的时候应该注意的几个问题
+1. 所有涉及URL连接的部分都是硬编码，运行前注意修改成自己对应的URL
+2. 出问题首先考虑是不是对应组件版本不对，最好是使用相同环境
+
