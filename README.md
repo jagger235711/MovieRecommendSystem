@@ -1,4 +1,4 @@
-# 请尊重作者劳动成果，请遵守学术诚信
+# 请尊重作者劳动成果，请遵守学术诚信，本仓库是该论文唯一原创
 ![image](https://github.com/user-attachments/assets/e0f296aa-d4e0-429a-91b9-108ac6bf36e7)
 
 
